@@ -15,23 +15,17 @@ $app->get('/', function() use($app) {
 });
 
 $app->get('/getshops/:latitude/:longitude/', function ($latitude, $longitude) {
-	
-	//require_once 'libShop.php';
-	//$st_results = getShops($latitude, $longitude);
-
-	$st_results = array('shopid' => 1, 'name' => 'Dhingra Grocers', 'latitude' => '28.541369N', 'longitude' => '77.249780E');
-	echo json_encode($st_results);
-
+	//$st_results = array('shopid' => 1, 'name' => 'Dhingra Grocers', 'latitude' => '28.541369', 'longitude' => '77.249780');
+	require_once 'libShop.php';
+	$shops = getShops($latitude, $longitude);
+	echo $shops;
 });
 
 $app->get('/getcat/:shopid/', function ($shopId) {
-	
 	//require_once 'libShop.php';
 	//$st_results = getCat($shopId);
-
 	$st_results = array('prodid' => 1, 'name' => 'Water 20L Jar', 'price' => 50);
 	echo json_encode($st_results);
-
 });
 
 $app->run();
