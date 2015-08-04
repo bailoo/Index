@@ -1,0 +1,25 @@
+[
+	
+
+	{
+		"shopid":2,
+		"name":"Lauda Grocers",
+		"latitude":"28.5513234999999973",
+		"longitude":"77.22983050000004"
+	},
+
+	{
+		"shopid":3,
+		"name":"Bailoo Grocers",
+		"latitude":"28.5213234999999974",
+		"longitude":"77.21983050000005"
+	},
+
+	{
+		"shopid":4,
+		"name":"Suree Grocers",
+		"latitude":"28.5013234999999975",
+		"longitude":"77.21983050000008"
+	}
+
+]

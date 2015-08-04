@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Locpr | Local shopper</title>
+	<style>
+		html, body {
+		  height: 100%;
+		  margin: 0;
+		}
+		#map{
+		  height: 100%;
+		  margin: 0;
+		}
+	</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script>
+
+(function(){
+
+var shopLat,
+	shopLon;
+
+function getData() {
+	var xmlHttp = new XMLHttpRequest(),
+		url = 'shop.json';
+
+		// xmlHttp.open("GET", url, true);
+		xmlHttp.onreadystatechange = function() {
+	    	if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+	        	var shopData = JSON.parse(xmlHttp.responseText);
+
+	        	for(var i = 0; i< shopData.length; i++) {
+	        		shopLat = shopData[i].latitude;
+	        		shopLon = shopData[i].longitude;
+	        		//console.log(shopLat +'-'+shopLon);
+	        		drawMarker(shopLat, shopLon);
+
+	        	}
+	        	
+	    	}
+	    	
+		}
+		xmlHttp.open("GET", url, true);
+		xmlHttp.send();
+}
+
+getData();
+
+
+var mapOptions = {
+    center: new google.maps.LatLng(37.7831,-122.4039),
+    zoom: 12,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+};
+
+
+
+var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+
+
+//Map loaded according to current location
+if(navigator.geolocation) {
+	navigator.geolocation.getCurrentPosition(function(pos){
+
+		newPos = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+		console.log(newPos);
+		map.setCenter(newPos);
+		customMarker(newPos.G, newPos.K)
+	})
+
+}
+
+function drawMarker(lat, lon) {
+	var markerOptions = {
+		position: new google.maps.LatLng(lat, lon),
+		animation: google.maps.Animation.DROP
+	}
+	//console.log(markerOptions);
+	var shopMarker = new google.maps.Marker(markerOptions);
+	shopMarker.setMap(map);
+	
+}
+
+function customMarker(lat, lon) {
+	console.log(lat+'-'+lon);
+	var markerOptions = {
+		position: new google.maps.LatLng(lat, lon),
+		icon: "/images/current.png"
+	}
+	//console.log(markerOptions);
+	var currentMarker = new google.maps.Marker(markerOptions);
+	currentMarker.setMap(map);
+	
+}
+
+
+
+
+})()
+	
+
+
+
+</script>
+</body>
+</html>
