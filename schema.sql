@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 16, 2015 at 06:13 PM
+-- Generation Time: Aug 18, 2015 at 05:01 AM
 -- Server version: 5.5.44-MariaDB-1ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.11
 
@@ -19,8 +19,55 @@ SET time_zone = "+00:00";
 --
 -- Database: `mls`
 --
-CREATE DATABASE IF NOT EXISTS `mls` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `mls`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cat`
+--
+
+CREATE TABLE IF NOT EXISTS `cat` (
+  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
+  `cid` int(6) unsigned NOT NULL,
+  `name` varchar(40) NOT NULL,
+  `price` int(6) NOT NULL,
+  `photo` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `cat`
+--
+
+INSERT INTO `cat` (`id`, `cid`, `name`, `price`, `photo`) VALUES
+(1, 1, 'Mineral Water 20L Jar', 60, '1.jpg'),
+(2, 1, 'Pepsi 600 ml', 30, '2.jpg'),
+(3, 2, 'Arhar Dal 1kg', 120, '3.jpg'),
+(4, 2, 'Basmati Rice 1kg', 55, '4.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
+  `pid` int(6) unsigned NOT NULL,
+  `qty` int(2) unsigned NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `pid`, `qty`, `time`) VALUES
+(1, 1, 1, '2015-08-17 21:15:58'),
+(2, 2, 1, '2015-08-17 21:15:58'),
+(3, 3, 1, '2015-08-17 21:15:58'),
+(4, 3, 1, '2015-08-17 21:15:58');
 
 -- --------------------------------------------------------
 
