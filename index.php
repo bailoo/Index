@@ -31,9 +31,9 @@ $app->get('/', function(){
 	echo "<br/>\n";	
 	echo "/localshops/:latitude/:longitude <br/>\n";
 	echo "<br/>\n";	
-	echo "/getcat/:shopid <br/>\n";
+	echo "/product/:shopid <br/>\n";
 	echo "<br/>\n";	
-	echo "/getorders/:shopid <br/>\n";
+	echo "/orders/:shopid <br/>\n";
 	echo "<br/>\n";	
 });
 
@@ -70,6 +70,21 @@ $app->get('/shop/:id', function($id) use ($app, $db) {
             'message' => "Shop ID $id does not exist"
         ));
     }
+});
+
+// Get local shops
+$app->get('/localshop', function() use($app, $db){
+    $shops = array();
+    foreach ($db->shops() as $shop) {
+        $shops[]  = array(
+            'id' => $shop['id'],
+            'name' => $shop['name'],
+            'latitude' => $shop['latitude'],
+            'longitude' => $shop['longitude']
+        );
+    }
+    $app->response()->header("Content-Type", "application/json");
+    echo json_encode($shops, JSON_FORCE_OBJECT);
 });
 
 // Add a new shop
@@ -119,19 +134,129 @@ $app->delete('/shop/:id', function($id) use($app, $db){
     }
 });
 
-// Get local shops
-$app->get('/localshops', function() use($app, $db){
-    $shops = array();
-    foreach ($db->shops() as $shop) {
-        $shops[]  = array(
-            'id' => $shop['id'],
-            'name' => $shop['name'],
-            'latitude' => $shop['latitude'],
-            'longitude' => $shop['longitude']
+// Get all products of a shop
+$app->get('/product/:shopid/', function ($shopId) use($app, $db) {
+    $prods = array();
+    foreach ($db->cat() as $prod) {
+        $prods[]  = array(
+            'id' => $prod['id'],
+            'cid' => $prod['cid'],
+            'name' => $prod['name'],
+            'price' => $prod['price'],
+            'photo' => $prod['photo']
         );
     }
     $app->response()->header("Content-Type", "application/json");
-    echo json_encode($shops, JSON_FORCE_OBJECT);
+    echo json_encode($prods, JSON_FORCE_OBJECT);
+});
+
+// Add a new product
+$app->post('/product', function() use($app, $db){
+    $app->response()->header("Content-Type", "application/json");
+    $prod = $app->request()->post();
+    $result = $db->cat->insert($prod);
+    echo json_encode(array('id' => $result['id']));
+});
+
+// Update a product
+$app->put('/product/:id', function($id) use($app, $db){
+    $app->response()->header("Content-Type", "application/json");
+    $prod = $db->cat()->where("id", $id);
+    if ($prod->fetch()) {
+        $post = $app->request()->put();
+        $result = $prod->update($post);
+        echo json_encode(array(
+            "status" => (bool)$result,
+            "message" => "Shop updated successfully"
+            ));
+    }
+    else{
+        echo json_encode(array(
+            "status" => false,
+            "message" => "Shop id $id does not exist"
+        ));
+    }
+});
+
+// Remove a product 
+$app->delete('/product/:id', function($id) use($app, $db){
+    $app->response()->header("Content-Type", "application/json");
+    $prod = $db->cat()->where('id', $id);
+    if($prod->fetch()){
+        $result = $prod->delete();
+        echo json_encode(array(
+            "status" => true,
+            "message" => "Shop deleted successfully"
+        ));
+    }
+    else{
+        echo json_encode(array(
+            "status" => false,
+            "message" => "Shop id $id does not exist"
+        ));
+    }
+});
+
+// Get all orders of a shop
+$app->get('/orders/:shopid/', function ($shopId) use($app, $db) {
+    $shops = array();
+    foreach ($db->orders() as $order) {
+        $prods[]  = array(
+            'id' => $order['id'],
+            'pid' => $order['pid'],
+            'qty' => $order['qty'],
+            'time' => $order['time']
+        );
+    }
+    $app->response()->header("Content-Type", "application/json");
+    echo json_encode($prods, JSON_FORCE_OBJECT);
+});
+
+// Add a new order
+$app->post('/orders', function() use($app, $db){
+    $app->response()->header("Content-Type", "application/json");
+    $order = $app->request()->post();
+    $result = $db->order->insert($order);
+    echo json_encode(array('id' => $result['id']));
+});
+
+// Update an order
+$app->put('/orders/:id', function($id) use($app, $db){
+    $app->response()->header("Content-Type", "application/json");
+    $order = $db->order()->where("id", $id);
+    if ($order->fetch()) {
+        $post = $app->request()->put();
+        $result = $order->update($post);
+        echo json_encode(array(
+            "status" => (bool)$result,
+            "message" => "Shop updated successfully"
+            ));
+    }
+    else{
+        echo json_encode(array(
+            "status" => false,
+            "message" => "Shop id $id does not exist"
+        ));
+    }
+});
+
+// Remove an order 
+$app->delete('/orders/:id', function($id) use($app, $db){
+    $app->response()->header("Content-Type", "application/json");
+    $order = $db->order()->where('id', $id);
+    if($order->fetch()){
+        $result = $order->delete();
+        echo json_encode(array(
+            "status" => true,
+            "message" => "Shop deleted successfully"
+        ));
+    }
+    else{
+        echo json_encode(array(
+            "status" => false,
+            "message" => "Shop id $id does not exist"
+        ));
+    }
 });
 
 /* Run the application */
