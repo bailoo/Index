@@ -37,6 +37,10 @@ $app->get('/', function(){
 	echo "<br/>\n";	
 });
 
+/******************
+**  Shops	 **
+*******************/
+
 // Get all shops
 $app->get('/shop', function() use($app, $db){
     $shops = array();
@@ -134,6 +138,10 @@ $app->delete('/shop/:id', function($id) use($app, $db){
     }
 });
 
+/******************
+**  Products	 **
+*******************/
+
 // Get all products of a shop
 $app->get('/product/:shopid/', function ($shopId) use($app, $db) {
     $prods = array();
@@ -167,13 +175,13 @@ $app->put('/product/:id', function($id) use($app, $db){
         $result = $prod->update($post);
         echo json_encode(array(
             "status" => (bool)$result,
-            "message" => "Shop updated successfully"
+            "message" => "Product updated successfully"
             ));
     }
     else{
         echo json_encode(array(
             "status" => false,
-            "message" => "Shop id $id does not exist"
+            "message" => "Product id $id does not exist"
         ));
     }
 });
@@ -186,16 +194,20 @@ $app->delete('/product/:id', function($id) use($app, $db){
         $result = $prod->delete();
         echo json_encode(array(
             "status" => true,
-            "message" => "Shop deleted successfully"
+            "message" => "Product deleted successfully"
         ));
     }
     else{
         echo json_encode(array(
             "status" => false,
-            "message" => "Shop id $id does not exist"
+            "message" => "Product id $id does not exist"
         ));
     }
 });
+
+/*****************
+**  Orders	**
+******************/
 
 // Get all orders of a shop
 $app->get('/orders/:shopid/', function ($shopId) use($app, $db) {
@@ -229,13 +241,13 @@ $app->put('/orders/:id', function($id) use($app, $db){
         $result = $order->update($post);
         echo json_encode(array(
             "status" => (bool)$result,
-            "message" => "Shop updated successfully"
+            "message" => "Order updated successfully"
             ));
     }
     else{
         echo json_encode(array(
             "status" => false,
-            "message" => "Shop id $id does not exist"
+            "message" => "Order id $id does not exist"
         ));
     }
 });
@@ -248,13 +260,13 @@ $app->delete('/orders/:id', function($id) use($app, $db){
         $result = $order->delete();
         echo json_encode(array(
             "status" => true,
-            "message" => "Shop deleted successfully"
+            "message" => "Order deleted successfully"
         ));
     }
     else{
         echo json_encode(array(
             "status" => false,
-            "message" => "Shop id $id does not exist"
+            "message" => "Order id $id does not exist"
         ));
     }
 });
