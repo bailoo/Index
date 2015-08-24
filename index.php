@@ -240,7 +240,8 @@ $app->get('/orders/:shopid/', function ($shopId) use($app, $db) {
         );
     }
     $app->response()->header("Content-Type", "application/json");
-    echo json_encode($prods, JSON_FORCE_OBJECT);
+    echo json_encode($prods);
+    //echo json_encode($prods, JSON_FORCE_OBJECT);
 });
 
 // Add a new order
