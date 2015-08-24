@@ -3,7 +3,6 @@
 require ('./vendor/autoload.php');
 
 /* Require Slim and plugins */
-#require 'Slim/Slim.php';
 require 'plugins/NotORM.php';
 
 /* Register autoloader and instantiate Slim */
@@ -148,10 +147,10 @@ $app->delete('/shop/:id', function($id) use($app, $db){
 // Get all products of a shop
 $app->get('/product/:shopid/', function ($shopId) use($app, $db) {
     $prods = array();
-    foreach ($db->cat() as $prod) {
+    foreach ($db->products() as $prod) {
         $prods[]  = array(
             'id' => $prod['id'],
-            'cid' => $prod['cid'],
+            'category' => $prod['cid'],	/* category id */
             'name' => $prod['name'],
             'price' => $prod['price'],
             'photo' => $prod['photo']
@@ -215,10 +214,27 @@ $app->delete('/product/:id', function($id) use($app, $db){
 // Get all orders of a shop
 $app->get('/orders/:shopid/', function ($shopId) use($app, $db) {
     $shops = array();
-    foreach ($db->orders() as $order) {
+    foreach ($db->orders()->where('sid', $shopId) as $order) {
+
+	$_shop = $db->shops()->where('id', $order['sid'])->fetch();	/* shop ID */
+	$shop = $_shop['name'];
+
+	$_user = $db->users()->where('id', $order['uid'])->fetch();	/* buyer ID */
+	$buyer = $_user['name']; 
+	$mobile = $_user['mobile'];
+
+	$_prod = $db->products()->where('id', $order['pid'])->fetch();	/* shop ID */
+	$prod = $_prod['name'];
+
         $prods[]  = array(
-            'id' => $order['id'],
-            'pid' => $order['pid'],
+            'id' => $order['id'],			/* order ID */
+            'shop' => $shop,
+            'status' => $order['status'],
+            'buyer' => $buyer,
+            'mobile' => $mobile,
+            'delivery address' => $order['address'],
+            'delivery time' => $order['dtime'],
+            'products' => $prod,
             'qty' => $order['qty'],
             'time' => $order['time']
         );
