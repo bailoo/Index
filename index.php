@@ -27,13 +27,13 @@ $db = new NotORM($pdo);
 $app->get('/', function(){
 	echo "MyLocalShoppr API <br/>\n";
 	echo "<br/>\n";	
-	echo "/shop <br/>\n";
+	echo "/shops <br/>\n";
 	echo "<br/>\n";	
-	echo "/shop/:id <br/>\n";
+	echo "/shops/:id <br/>\n";
 	echo "<br/>\n";	
 	echo "/localshops/:latitude/:longitude <br/>\n";
 	echo "<br/>\n";	
-	echo "/product/:shopid <br/>\n";
+	echo "/products/:shopid <br/>\n";
 	echo "<br/>\n";	
 	echo "/orders/:shopid <br/>\n";
 	echo "<br/>\n";	
@@ -44,7 +44,7 @@ $app->get('/', function(){
 *******************/
 
 // Get all shops
-$app->get('/shop', function() use($app, $db){
+$app->get('/shops', function() use($app, $db){
     $shops = array();
     foreach ($db->shops() as $shop) {
         $shops[]  = array(
@@ -55,11 +55,11 @@ $app->get('/shop', function() use($app, $db){
         );
     }
     $app->response()->header("Content-Type", "application/json");
-    echo json_encode($shops, JSON_FORCE_OBJECT);
+    echo json_encode($shops);
 });
 
 // Get a single shop
-$app->get('/shop/:id', function($id) use ($app, $db) {
+$app->get('/shops/:id', function($id) use ($app, $db) {
     $app->response()->header("Content-Type", "application/json");
     $shop = $db->shops()->where('id', $id);
     if($data = $shop->fetch()){
@@ -90,7 +90,7 @@ $app->get('/localshop', function() use($app, $db){
         );
     }
     $app->response()->header("Content-Type", "application/json");
-    echo json_encode($shops, JSON_FORCE_OBJECT);
+    echo json_encode($shops);
 });
 
 // Add a new shop
@@ -102,7 +102,7 @@ $app->post('/shop', function() use($app, $db){
 });
 
 // Update a shop
-$app->put('/shop/:id', function($id) use($app, $db){
+$app->put('/shops/:id', function($id) use($app, $db){
     $app->response()->header("Content-Type", "application/json");
     $shop = $db->shops()->where("id", $id);
     if ($shop->fetch()) {
@@ -122,7 +122,7 @@ $app->put('/shop/:id', function($id) use($app, $db){
 });
 
 // Remove a shop
-$app->delete('/shop/:id', function($id) use($app, $db){
+$app->delete('/shops/:id', function($id) use($app, $db){
     $app->response()->header("Content-Type", "application/json");
     $shop = $db->shops()->where('id', $id);
     if($shop->fetch()){
@@ -145,7 +145,7 @@ $app->delete('/shop/:id', function($id) use($app, $db){
 *******************/
 
 // Get all products of a shop
-$app->get('/product/:shopid/', function ($shopId) use($app, $db) {
+$app->get('/products/:shopid/', function ($shopId) use($app, $db) {
     $prods = array();
     foreach ($db->products() as $prod) {
         $prods[]  = array(
@@ -157,7 +157,7 @@ $app->get('/product/:shopid/', function ($shopId) use($app, $db) {
         );
     }
     $app->response()->header("Content-Type", "application/json");
-    echo json_encode($prods, JSON_FORCE_OBJECT);
+    echo json_encode($prods);
 });
 
 // Add a new product
@@ -169,7 +169,7 @@ $app->post('/product', function() use($app, $db){
 });
 
 // Update a product
-$app->put('/product/:id', function($id) use($app, $db){
+$app->put('/products/:id', function($id) use($app, $db){
     $app->response()->header("Content-Type", "application/json");
     $prod = $db->cat()->where("id", $id);
     if ($prod->fetch()) {
@@ -189,7 +189,7 @@ $app->put('/product/:id', function($id) use($app, $db){
 });
 
 // Remove a product 
-$app->delete('/product/:id', function($id) use($app, $db){
+$app->delete('/products/:id', function($id) use($app, $db){
     $app->response()->header("Content-Type", "application/json");
     $prod = $db->cat()->where('id', $id);
     if($prod->fetch()){
@@ -241,7 +241,6 @@ $app->get('/orders/:shopid/', function ($shopId) use($app, $db) {
     }
     $app->response()->header("Content-Type", "application/json");
     echo json_encode($prods);
-    //echo json_encode($prods, JSON_FORCE_OBJECT);
 });
 
 // Add a new order
